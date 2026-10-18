@@ -1,0 +1,65 @@
+name: Check presets
+
+# pull_request_target runs this file as it is on main, so a pull request
+# cannot change its own check. The pull request is only read as data: the
+# validator comes from the GoldenNugget repository, and nothing from the
+# pull request is executed.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - name: Check out the pull request
+        uses: actions/checkout@v5
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
+          path: catalog
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out GoldenNugget
+        uses: actions/checkout@v5
+        with:
+          repository: GoldenNugget-Team/GoldenNugget
+          ref: main
+          path: gn
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: gn/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0 libxkbcommon0 libgl1
+          python -m pip install --upgrade pip
+          python -m pip install -r gn/requirements.txt
+
+      - name: Check presets
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          ASSOCIATION: ${{ github.event.pull_request.author_association }}
+        run: |
+          args=()
+          case "$ASSOCIATION" in
+            OWNER|MEMBER|COLLABORATOR) ;;
+            *) args+=(--changed-since "$BASE_SHA") ;;
+          esac
+          python gn/tools/preset_catalog.py check catalog --summary "$GITHUB_STEP_SUMMARY" "${args[@]}"

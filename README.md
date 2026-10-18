@@ -1,7 +1,7 @@
 # GoldenNugget Presets
 
 The community preset and template catalog for [GoldenNugget](https://github.com/GoldenNugget-Team/GoldenNugget).
-Open **Presets → Browse Catalog** in the app to see these presets, check how
+Open **Community Catalog** on the app's home screen to see these presets, check how
 risky each one is, preview it on a virtual iPhone and import it. The
 **Templates** tab lists `.batter` templates and the files each of their tweaks
 writes; **Download and Add** puts one in PosterBoard → Templates.

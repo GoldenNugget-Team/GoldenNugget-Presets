@@ -53,7 +53,19 @@ Templates are `.batter` files: a ZIP with a `config.json`, described in
 [the template documentation](https://github.com/GoldenNugget-Team/GoldenNugget/blob/main/documentation.md).
 Templates with community tweaks use `"format_version": "3"`.
 
-1. Check it first: `python nugget_cli.py wallpaper validate my-template.batter`.
+### With Batter Builder (recommended)
+
+[Batter Builder](https://github.com/GoldenNugget-Team/GoldenNugget-TemplateBuilder/releases/latest)
+makes templates with community tweaks in a window, no JSON by hand. It runs
+the same checks as this catalog while you edit, shows the template on a virtual
+iPhone, and **Submit to Catalog** saves `<id>.batter` and opens the upload page
+below for you. It also opens existing templates, so you can add tweaks to one
+you already have.
+
+### By hand
+
+1. Check it first: `python nugget_cli.py wallpaper validate my-template.batter`
+   (or open it in Batter Builder, whose Check page lists every problem).
 2. Name it after its id: lowercase letters, digits and dashes, for example
    `dock-tweaks.batter`.
 3. Open [Upload files to templates/](https://github.com/GoldenNugget-Team/GoldenNugget-Presets/upload/main/templates),
@@ -67,7 +79,8 @@ may be at most 25 MB.
 
 A check runs on every pull request. It reports what is wrong, or shows a table
 with each preset's tweak count and risk level, and for each template every file
-its tweaks write. A pull request from someone outside the team may only add or
+its tweaks write. When a template has problems, open it in Batter Builder to
+see each one next to the tweak it belongs to, fix it and upload the file again. A pull request from someone outside the team may only add or
 edit files in `presets/` and `.batter` files in `templates/`.
 
 A maintainer then reviews it. A preset is not merged when it:

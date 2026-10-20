@@ -29,6 +29,11 @@ jobs:
           path: catalog
           fetch-depth: 0
           persist-credentials: false
+          # checkout refuses a fork's code under pull_request_target unless
+          # told otherwise. It is safe here: the files are only read as data
+          # by GoldenNugget's validator, nothing from them runs, and the
+          # token is read-only and not kept in the checkout.
+          allow-unsafe-pr-checkout: true
 
       - name: Check out GoldenNugget
         uses: actions/checkout@v5
